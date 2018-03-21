@@ -1,0 +1,5 @@
+tweepy
+PyYAML
+boto3
+requests-aws4auth
+elasticsearch
