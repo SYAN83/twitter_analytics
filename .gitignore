@@ -3,3 +3,5 @@ __pycache__/
 *.yml
 !credentials_template.yml
 env/
+.DS_Store
+

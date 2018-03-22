@@ -4,13 +4,6 @@ import functools
 import utils
 from es_mapping import *
 
-# import logging
-import logging
-from logging.config import fileConfig
-
-fileConfig('./logging_config.ini')
-logger = logging.getLogger()
-
 
 def lambda_handler(event, context):
     # Read config file
@@ -20,10 +13,10 @@ def lambda_handler(event, context):
     # TODO: Change `es_host` to your elasticsearch domain Endpoint
     es_host = 'search-demo-tweet-analytics-mruraxsbz3fartjmjqwi5lpbdu.us-east-2.es.amazonaws.com'
     es = utils.es_connector(host=es_host, **config)
-
+    print(es.info())
     # Check es index
     if not es.indices.exists(index=es_index):
-        logger.info('Creating mapping...')
+        print('Creating mapping...')
         es.indices.create(index=es_index, body={'mappings': mapping})
 
     # Connect to S3 and comprehend
@@ -37,10 +30,12 @@ def lambda_handler(event, context):
     for record in event['Records']:
         bucket = record['s3']['bucket']['name']
         key = record['s3']['object']['key']
+        print(bucket, key)
         total = utils.s3_to_es_uploader(s3=s3, es=es,
                                         bucket=bucket, key=key,
-                                        extractor=extractor, upload=True)
-        logger.info('Total tweets uploaded: {}'.format(total))
+                                        extractor=extractor, upload=False)
+        print('Total tweets uploaded: {}'.format(total))
+    return total
 
 
 if __name__ == '__main__':
