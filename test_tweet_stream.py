@@ -23,11 +23,11 @@ class TweetStreamListener(tweepy.StreamListener):
         logger.info('Stream Listener connected.')
 
     def on_data(self, raw_data):
-        # # Raw tweet data
-        # pprint.pprint(raw_data)
-        # created time and text only
         tweet = json.loads(raw_data, )
-        print('Time: {}\tText: {}'.format(tweet['created_at'], tweet['text']))
+        # Display raw tweet
+        pprint.pprint(tweet)
+        # # Display created time and text only
+        # print('Time: {}\tText: {}'.format(tweet['created_at'], tweet['text']))
 
     def on_error(self, status_code):
         logger.error(status_code)
@@ -44,6 +44,7 @@ if __name__ == '__main__':
                              listener=listener,
                              retry_count=3)
     # Start streaming
+    # TODO: Change `track` to different topics
     track = ['#winterstorm','#snowstorm', 'snow', 'storm']
     logger.info('Start streaming tweets containing one or more words in `{}`'.format(track))
     streamer.filter(track=track,
