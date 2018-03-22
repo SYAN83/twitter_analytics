@@ -62,12 +62,12 @@ if __name__ == '__main__':
     # TODO: Change `bucket` and `key`
     bucket = 'demo-tweet-bucket'
     # TODO: Change `key` to any key available in your S3 bucket
-    key = '2018/03/22/02/demo-tweet-to-s3-1-2018-03-22-02-45-55-3299ac51-2cd5-4db0-946a-74d41d9235a2'
+    key = '2018/03/22/10/demo-tweet-to-s3-1-2018-03-22-10-24-56-5e2ac3bb-54ff-4253-9d81-38ed06510862'
     # Setting `sentiment` to None will disable calling Comprehend API
     extractor = functools.partial(utils.tweet_extractor, sentiment=utils.get_sentiment, comprehend=comprehend)
     # TODO: First test parse tweets by setting `upload=False`,
     # TODO: Then upload tweets to Elasticsearch by setting `upload=True`
     total = s3_to_es_uploader(s3=s3, es=es,
                               bucket=bucket, key=key,
-                              extractor=extractor, upload=False)
+                              extractor=extractor, upload=True)
     print('Total tweets uploaded: {}'.format(total))

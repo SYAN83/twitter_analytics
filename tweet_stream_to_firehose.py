@@ -66,7 +66,7 @@ if __name__ == '__main__':
                     languages=['en'],
                     async=True)
     # TODO: (Optional) Change `300`(seconds) to your desired time
-    time.sleep(300)
+    time.sleep(1200)
     # Stop streaming
     logger.info('Disconnecting twitter API...')
     streamer.disconnect()

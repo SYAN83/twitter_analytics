@@ -6,6 +6,7 @@ from es_mapping import *
 
 
 def lambda_handler(event, context):
+    print('Lambda trigger begin...')
     # Read config file
     config = utils.read_config('./credentials.yml')
 
@@ -33,9 +34,12 @@ def lambda_handler(event, context):
         print(bucket, key)
         total = utils.s3_to_es_uploader(s3=s3, es=es,
                                         bucket=bucket, key=key,
-                                        extractor=extractor, upload=False)
+                                        extractor=extractor, upload=True)
         print('Total tweets uploaded: {}'.format(total))
-    return total
+
+    print('Lambda trigger end...')
+
+    return event
 
 
 if __name__ == '__main__':

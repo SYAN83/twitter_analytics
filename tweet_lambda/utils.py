@@ -137,7 +137,7 @@ def s3_to_es_uploader(s3, es, bucket, key, extractor, upload=False):
             if len(tweets) == bulk_size:
                 success, _ = bulk(es, tweets)
                 count += success
-                logger.info('ElasticSearch indexed {} documents'.format(count))
+                print('ElasticSearch indexed {} documents'.format(count))
                 tweets = []
         else:
             print(parsed_tweet)
@@ -145,7 +145,7 @@ def s3_to_es_uploader(s3, es, bucket, key, extractor, upload=False):
         if upload:
             success, _ = bulk(es, tweets)
             count += success
-            logger.info('ElasticSearch indexed {} documents'.format(count))
+            print('ElasticSearch indexed {} documents'.format(count))
     return count
 
 
