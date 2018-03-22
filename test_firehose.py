@@ -15,11 +15,11 @@ if __name__ == '__main__':
     # TODO: Change `data` to any string or JSON object.
     data = 'testing_2'
     # Putting record to stream
-    response = firehose.put_record(
-        DeliveryStreamName=stream_name,
-        Record={'Data': data}
-    )
-    print(response)
+    # response = firehose.put_record(
+    #     DeliveryStreamName=stream_name,
+    #     Record={'Data': data}
+    # )
+    # print(response)
 
 
 

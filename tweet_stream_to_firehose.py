@@ -4,7 +4,7 @@ import json
 import time
 
 # import UDF
-from utils import *
+import utils
 
 # import logging
 import logging
@@ -45,11 +45,11 @@ class TweetStreamListener(tweepy.StreamListener):
 
 if __name__ == '__main__':
     # Read config file
-    config = read_config(file_path='./credentials.yml')
+    config = utils.read_config(file_path='./credentials.yml')
     # Connect to AWS
-    session = aws_authorizer(**config)
+    session = utils.aws_authorizer(**config)
     # Connect to Twitter API
-    api = twitter_authorizer(**config)
+    api = utils.twitter_authorizer(**config)
     # TODO: Change `stream_name` to your firehose stream name.
     stream_name = 'demo-tweet-to-s3'
     listener = TweetStreamListener(session=session,
@@ -65,7 +65,7 @@ if __name__ == '__main__':
     streamer.filter(track=track,
                     languages=['en'],
                     async=True)
-    # TODO: (Optional) Change `300` to a bigger number if you want it runs longer
+    # TODO: (Optional) Change `300`(seconds) to your desired time
     time.sleep(300)
     # Stop streaming
     logger.info('Disconnecting twitter API...')
