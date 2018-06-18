@@ -4,8 +4,10 @@ import boto3
 import json
 from elasticsearch import Elasticsearch, RequestsHttpConnection
 from requests_aws4auth import AWS4Auth
-from es_mapping import *
 from elasticsearch.helpers import bulk
+
+# import schema
+from es_mapping import es_index, doc_type
 
 # import logging
 import logging
@@ -52,6 +54,11 @@ def aws_authorizer(**kwargs):
 
 
 def es_connector(host, **config):
+    """AWS Elasticsearch authentication
+
+    :param kwargs: AWS SDK credentials.
+    :return: Elasticsearch connection.
+    """
     aws_access_key_id = config.get('aws_access_key_id')
     aws_secret_access_key = config.get('aws_secret_access_key')
     region_name = config.get('region_name')
@@ -69,11 +76,22 @@ def es_connector(host, **config):
 
 
 def json_parser(raw_data):
+    """A json parser wrapper
+
+    :param raw_data: json object
+    :return: list of Python dictionary
+    """
     data = raw_data.strip().split('\n')
     return [json.loads(x) for x in data]
 
 
 def get_sentiment(text, **kwargs):
+    """AWS Comprehend Sentiment Analysis Wrapper
+
+    :param text: input text
+    :param kwargs:
+    :return:
+    """
     if 'comprehend' not in kwargs:
         raise ValueError('comprehend not available')
     comprehend = kwargs.get('comprehend')
@@ -82,6 +100,13 @@ def get_sentiment(text, **kwargs):
 
 
 def tweet_extractor(tweet, sentiment=None, **kwargs):
+    # # extract basic info
+    # data = {'id_str': tweet['id_str'],
+    #         'created_at': tweet['created_at'],
+    #         'timestamp_ms': tweet['timestamp_ms'],}
+    # # extract text, hashtags and user_mentions
+    # text = tweet['text']
+
     # extract hashtags and user_mentions
     hashtags = [hashtag['text'].lower() for hashtag in tweet['entities']['hashtags']]
     mentions = [user_mention['screen_name'].lower() for user_mention in tweet['entities']['user_mentions']]
@@ -137,7 +162,7 @@ def s3_to_es_uploader(s3, es, bucket, key, extractor, upload=False):
             if len(tweets) == bulk_size:
                 success, _ = bulk(es, tweets)
                 count += success
-                print('ElasticSearch indexed {} documents'.format(count))
+                logger.info('ElasticSearch indexed {} documents'.format(count))
                 tweets = []
         else:
             print(parsed_tweet)
@@ -145,7 +170,7 @@ def s3_to_es_uploader(s3, es, bucket, key, extractor, upload=False):
         if upload:
             success, _ = bulk(es, tweets)
             count += success
-            print('ElasticSearch indexed {} documents'.format(count))
+            logger.info('ElasticSearch indexed {} documents'.format(count))
     return count
 
 

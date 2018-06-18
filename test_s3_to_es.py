@@ -1,8 +1,9 @@
-import pprint
-import utils
-from es_mapping import *
 from elasticsearch.helpers import bulk
 import functools
+
+# import UDF and mapping
+import utils
+from es_mapping import es_index, doc_type, mapping
 
 # import logging
 import logging
@@ -47,27 +48,30 @@ if __name__ == '__main__':
     config = utils.read_config('./credentials.yml')
 
     # Connect to es
-    # TODO: Change `es_host` to your elasticsearch domain Endpoint
-    es_host = 'search-demo-tweet-analytics-mruraxsbz3fartjmjqwi5lpbdu.us-east-2.es.amazonaws.com'
+    # TODO: Change `es_host` in credentials.yml to your elasticsearch domain Endpoint
+    es_host = config['es_host']
     es = utils.es_connector(host=es_host, **config)
 
+    # Create es index mapping (schema)
     if not es.indices.exists(index=es_index):
         logger.info('Creating mapping...')
         es.indices.create(index=es_index, body={'mappings': mapping})
 
-    # Connect to S3 and comprehend
+    # Connect to S3 and Comprehend
     session = utils.aws_authorizer(**config)
     s3 = session.client(service_name='s3')
     comprehend = session.client(service_name='comprehend')
-    # TODO: Change `bucket` and `key`
-    bucket = 'demo-tweet-bucket'
-    # TODO: Change `key` to any key available in your S3 bucket
-    key = '2018/03/22/10/demo-tweet-to-s3-1-2018-03-22-10-24-56-5e2ac3bb-54ff-4253-9d81-38ed06510862'
+
+    # TODO: Change `bucket`
+    bucket = 'worldcup-tweets'
+    # TODO: Change `key` to any key (file path) available in your S3 bucket
+    key = '2018/06/18/05/worldcup-tweets-1-2018-06-18-05-26-30-e08944d1-2dfa-432d-9933-813cc9a7d198'
     # Setting `sentiment` to None will disable calling Comprehend API
     extractor = functools.partial(utils.tweet_extractor, sentiment=utils.get_sentiment, comprehend=comprehend)
     # TODO: First test parse tweets by setting `upload=False`,
     # TODO: Then upload tweets to Elasticsearch by setting `upload=True`
     total = s3_to_es_uploader(s3=s3, es=es,
                               bucket=bucket, key=key,
-                              extractor=extractor, upload=True)
+                              extractor=extractor,
+                              upload=True)
     print('Total tweets uploaded: {}'.format(total))

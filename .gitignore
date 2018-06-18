@@ -4,4 +4,4 @@ __pycache__/
 !credentials_template.yml
 env/
 .DS_Store
-
+*.zip

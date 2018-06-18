@@ -7,14 +7,16 @@ from es_mapping import *
 
 def lambda_handler(event, context):
     print('Lambda trigger begin...')
+
     # Read config file
     config = utils.read_config('./credentials.yml')
 
     # Connect to es
     # TODO: Change `es_host` to your elasticsearch domain Endpoint
-    es_host = 'search-demo-tweet-analytics-mruraxsbz3fartjmjqwi5lpbdu.us-east-2.es.amazonaws.com'
+    es_host = config['es_host']
     es = utils.es_connector(host=es_host, **config)
     print(es.info())
+
     # Check es index
     if not es.indices.exists(index=es_index):
         print('Creating mapping...')
@@ -40,7 +42,3 @@ def lambda_handler(event, context):
     print('Lambda trigger end...')
 
     return event
-
-
-if __name__ == '__main__':
-    lambda_handler(event='', context='')

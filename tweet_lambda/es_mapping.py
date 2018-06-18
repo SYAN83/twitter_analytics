@@ -1,5 +1,5 @@
 es_index = 'tweet-index'
-doc_type = 'tweet'
+doc_type = 'tweet-type'
 mapping = {
     doc_type: {
         'properties': {

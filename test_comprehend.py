@@ -15,11 +15,11 @@ if __name__ == '__main__':
     session = aws_authorizer(**config)
     comprehend = session.client(service_name='comprehend')
 
-    # TODO: Define your own `docs` and get their sentiment scores
+    # TODO: (Optional) Define your own `docs` and get their sentiment scores
     # Echo (2nd Generation) review headers (5 stars/3 stars/1 star) from Amazon
     docs = ['Sound quality has been improved again! 3rd time\'s the charm.',
-               'Hoped to replace our small bluetooth speakers. Not so much',
-               'Very disappointed in the sound that was sold as "improved"']
+            'Hoped to replace our small bluetooth speakers. Not so much',
+            'Very disappointed in the sound that was sold as "improved"']
 
     # # Single document API
     # for doc in docs:
