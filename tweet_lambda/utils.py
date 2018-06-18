@@ -83,8 +83,8 @@ def get_sentiment(text, **kwargs):
 
 def tweet_extractor(tweet, sentiment=None, **kwargs):
     # extract hashtags and user_mentions
-    hashtags = [hashtag['text'] for hashtag in tweet['entities']['hashtags']]
-    mentions = [user_mention['screen_name'] for user_mention in tweet['entities']['user_mentions']]
+    hashtags = [hashtag['text'].lower() for hashtag in tweet['entities']['hashtags']]
+    mentions = [user_mention['screen_name'].lower() for user_mention in tweet['entities']['user_mentions']]
     # extracted data
     data = {'id_str': tweet['id_str'],
             'created_at': tweet['created_at'],
@@ -105,10 +105,10 @@ def tweet_extractor(tweet, sentiment=None, **kwargs):
         extended_tweet = tweet['extended_tweet']
         if extended_tweet.get('full_text'):
             data['text'] = extended_tweet['full_text']
-        hashtags = [hashtag['text'] for hashtag in extended_tweet['entities']['hashtags']]
+        hashtags = [hashtag['text'].lower() for hashtag in extended_tweet['entities']['hashtags']]
         if hashtags:
             data['hashtags'] = hashtags
-        mentions = [user_mention['screen_name'] for user_mention in extended_tweet['entities']['user_mentions']]
+        mentions = [user_mention['screen_name'].lower() for user_mention in extended_tweet['entities']['user_mentions']]
         if mentions:
             data['mentions'] = mentions
 

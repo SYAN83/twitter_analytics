@@ -60,13 +60,13 @@ if __name__ == '__main__':
                              retry_count=3)
     # Start streaming
     # TODO: Change `track` to different topics
-    track = ['#winterstorm', '#snowstorm', 'snow', 'storm']
+    track = ['#deletefacebook']
     logger.info('Start streaming tweets containing one or more words in `{}`'.format(track))
     streamer.filter(track=track,
                     languages=['en'],
                     async=True)
     # TODO: (Optional) Change `300`(seconds) to your desired time
-    time.sleep(1200)
+    time.sleep(600)
     # Stop streaming
     logger.info('Disconnecting twitter API...')
     streamer.disconnect()
